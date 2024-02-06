@@ -26,7 +26,8 @@ function start(data){
     barChart(id_number);
     bubbleChart(id_number);
     metaData(id_number);
-}
+};
+
 function barChart(id_number){
         // Retrieve all sample data
         d3.json(url).then(function(data){
@@ -112,24 +113,39 @@ function metaData(id_number){
     d3.json(url).then(function(data){
         // Filter based on the id_number
         function selectID(metadata) {
+            //check if metadata.id and id_number are the same type
             //console.log(typeof metadata.id);
             //console.log(typeof id_number);
             //console.log(id_number === metadata.id);
             //if(metadata.id === id_number){
                 //console.log("got it");
+
+            // since they are not, make metadata.id a string
             return String(metadata.id) === id_number;
             //}
         }
         //console.log(data);
         let meta = data.metadata.filter(selectID);
         let demographic = meta[0];
+        // check how to get into data
         //console.log(data.metadata);
         //console.log(meta);
         //console.log(datas);
         //console.log(data.metadata);
         //console.log(meta);
-        //since sample is an array, we need to go into it
         //console.log(datas);
+        console.log(demographic);
+        d3.select("#sample-metadata").html("");
+        console.log(demographic.id);
+        // Use Object.entries to add each key/value pair to the panel
+
+        d3.select("#sample-metadata").append("h6").text(`id : ${demographic.id}`);
+        d3.select("#sample-metadata").append("h6").text(`ethnicity: ${demographic.ethnicity}`);
+        d3.select("#sample-metadata").append("h6").text(`gender: ${demographic.gender}`);
+        d3.select("#sample-metadata").append("h6").text(`age: ${demographic.age}`);
+        d3.select("#sample-metadata").append("h6").text(`location : ${demographic.location}`);
+        d3.select("#sample-metadata").append("h6").text(`bbtype : ${demographic.bbtype}`);
+        d3.select("#sample-metadata").append("h6").text(`wfreq : ${demographic.wfreq}`);
 
     });
 };
