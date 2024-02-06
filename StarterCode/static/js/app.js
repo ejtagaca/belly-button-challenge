@@ -17,9 +17,9 @@ d3.json(url).then(function(data) {
     let id_number = names[0];
     //console.log(id_number);
     barChart(id_number);
+    bubbleChart(id_number);
+    metaData(id_number);
 });
-
-
 
 function barChart(id_number){
         // Retrieve all sample data
@@ -64,8 +64,64 @@ function barChart(id_number){
         });
 };
 
+function bubbleChart(id_number){
+    // Retrieve all sample data
+    d3.json(url).then(function(data){
+        // Filter based on the id_number
+        function selectID(samples) {
+            return samples.id === id_number;
+        }
+        let sample = data.samples.filter(selectID);
+        
+        //since sample is an array, we need to go into it
+        let values = sample[0];
+
+        // Get the otu_ids, lables, and sample values
+        let otu_ids = values.otu_ids; // x value and color
+        let otu_labels = values.otu_labels; // text
+        let sample_values = values.sample_values; //y value and marker size
+        
+        let xticks = otu_ids;
+        let yticks = sample_values;
+        let labels = otu_labels;
+
+        let trace = {
+            x: xticks,
+            y: yticks,
+            marker: { 
+                size: yticks,
+                color: xticks,
+                colorscale: 'Rainbow',
+             },
+            text: labels,
+            type: "scatter",
+            mode: 'markers',
+        };
+        Plotly.newPlot("bubble", [trace])
+    });
+};
+
+
+function metaData(id_number){
+    // Retrieve all sample data
+    d3.json(url).then(function(data){
+        // Filter based on the id_number
+        function selectID(meta) {
+            return meta.id === id_number;
+        }
+        let meta = data.metaData.filter(selectID);
+        
+        //since sample is an array, we need to go into it
+        let datas = meta[0];
+        console.log(datas);
+
+    });
+};
+
 function optionChanged(value) { 
     //console.log(value);
     // Call all functions to refresh data
     barChart(value);
+    bubbleChart(value);
+    metaData(value);
 }
